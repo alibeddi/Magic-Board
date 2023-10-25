@@ -1,0 +1,17 @@
+.main_layout {
+  display: grid;
+  grid-template-columns: 20rem 1fr;
+  µ & > .main_layout__container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: 100vh;
+    overflow-y: scroll;
+    .header {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      z-index: 8;
+    }
+  }
+}
