@@ -1,0 +1,21 @@
+.error-container {
+  width: 100wh;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  img {
+    opacity: 0.5;
+  }
+
+  .error-text {
+    font-size: 30px;
+    font-weight: 900;
+    color: rgb(133, 121, 121);
+    span {
+        color:red
+    }
+  }
+}

@@ -1,0 +1,51 @@
+@mixin vendor-prefix($property, $value) {
+  -webkit-#{$property}: $value;
+  -moz-#{$property}: $value;
+  -ms-#{$property}: $value;
+  -o-#{$property}: $value;
+  #{$property}: $value;
+}
+
+@mixin mq($width, $type: min) {
+  @if $type == max {
+    $width: $width - 1px;
+  }
+  @media only screen and (#{$type}-width: $width) {
+    @content;
+  }
+}
+
+@mixin mqs($max_width, $min_width) {
+  $min_width: $min_width - 1px;
+  @media only screen and (max-width: $max_width) and (min-width: $min_width) {
+    @content;
+  }
+}
+
+@mixin grid($template, $gap: 0) {
+  display: grid;
+  grid-template: $template;
+  grid-gap: $gap;
+}
+
+@mixin transition($property, $duration: 0.3s, $timing-function: ease) {
+  transition: $property $duration $timing-function;
+}
+
+@mixin media($query) {
+  @media only screen and (max-width: $query) {
+    @content;
+  }
+}
+
+//   .my-element {
+//     font-size: 14px;
+
+//     @include media(max-width: 767px) {
+//       font-size: 12px;
+//     }
+//   }
+
+@mixin z($layer) {
+  z-index: $layer;
+}
