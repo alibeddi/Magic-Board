@@ -1,0 +1,30 @@
+.rooms__card {
+  cursor: pointer;
+  display: flex;
+
+  width: 225px;
+  height: 80%;
+  background-color: rgb(255, 254, 254);
+  border: 3px solid #000;
+  display: flex;
+  align-items: center;
+
+  .card__info {
+    margin-top: 15px;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    h4 {
+      font-style: inherit;
+      font-weight: 600;
+      font-size: 25px;
+      line-height: 20px;
+    }
+    span {
+      color: #ce0808;
+    }
+  }
+}

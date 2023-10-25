@@ -1,0 +1,116 @@
+@use "../../assets/styles/abstracts/mixins" as *;
+.formcontainer {
+  form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+
+    .auth-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .remember-me {
+      display: flex;
+      gap: 5px;
+      input[type="checkbox"] {
+        margin-top: 2px !important;
+        display: grid;
+        place-content: center;
+        -webkit-appearance: none;
+        appearance: none;
+        background-color: var(--form-background);
+        margin: 0;
+        font: inherit;
+        color: currentColor;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #e4e7ec;
+        border-radius: 4px;
+      }
+      input[type="checkbox"]::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        transform: scale(0);
+        transition: 120ms transform ease-in-out;
+        box-shadow: inset 1em 1em #000000;
+        transform-origin: bottom left;
+        clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+      }
+
+      input[type="checkbox"]:checked::before {
+        transform: scale(1);
+      }
+      label {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
+        color: #717171;
+      }
+    }
+    .forget-password {
+      color: #040404;
+      font-weight: 500;
+      font-size: 16px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 35px;
+      p:first-child {
+        color: #84898e;
+        margin-bottom: 5px;
+      }
+      p:last-child {
+        color: #000000;
+        cursor: pointer;
+      }
+      p {
+        font-weight: 500;
+        font-size: 16px;
+        text-align: center;
+      }
+    }
+
+    .reset-error {
+      align-self: center;
+      font-weight: 300;
+      color: red;
+    }
+  }
+
+  .input-column-auth {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    width: 500px;
+
+    @include media(500px) {
+      width: 100%;
+    }
+  }
+  .auth-button-container {
+    margin: 30px auto 0;
+    width: fit-content;
+    display: flex;
+    gap: 10px;
+    button {
+      padding: 10px;
+      font-size: 16px;
+      width: 200px;
+      background: #0c0c0c;
+      border: 1px solid #d0d5dd;
+      box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+      border-radius: 8px;
+      color: #ffffff;
+
+      &:hover {
+        background-color: #ffffff;
+        color: #000;
+      }
+    }
+  }
+}
