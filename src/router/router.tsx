@@ -45,7 +45,7 @@ export const routes = [
   ...authRoutes,
   {
     path: "/",
-    guard: AuthGuard,
+    // guard: AuthGuard,
     layout: MainLayout,
     routes: [
       {

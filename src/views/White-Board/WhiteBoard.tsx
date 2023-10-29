@@ -1,12 +1,12 @@
 import React, { useState, useEffect, MouseEvent } from "react";
-
 import Swatch from "./components/swatch";
 import rough from "roughjs/bundled/rough.esm";
 
 const gen = rough.generator();
-function createElement(id: number, x1: number, y1: number, x2: number, y2: number) {
-    const roughEle = gen.line(x1, y1, x2, y2);
-    return { id, x1, y1, x2, y2, roughEle };
+
+function createElement(id: number, x1: number, y1: number, x2: number, y2: number, color: string) {
+    const roughEle = gen.line(x1, y1, x2, y2, { stroke: color }); // Set the line color
+    return { id, x1, y1, x2, y2, color, roughEle };
 }
 
 const midPointBtw = (p1: { x: number; y: number }, p2: { x: number; y: number }) => {
@@ -16,14 +16,8 @@ const midPointBtw = (p1: { x: number; y: number }, p2: { x: number; y: number })
     };
 };
 
-export const adjustElementCoordinates = (element: {
-    type: string;
-    x1: number;
-    y1: number;
-    x2: number;
-    y2: number;
-}) => {
-    const { type, x1, y1, x2, y2 } = element;
+export const adjustElementCoordinates = (element: Element) => {
+    const { x1, y1, x2, y2 } = element;
     if (x1 < x2 || (x1 === x2 && y1 < y2)) {
         return { x1, y1, x2, y2 };
     } else {
@@ -31,17 +25,16 @@ export const adjustElementCoordinates = (element: {
     }
 };
 
+
 type Element = {
     id: number;
     x1: number;
     y1: number;
     x2: number;
     y2: number;
-    type: string; // Add the 'type' property
-    strokeWidth: number; // Add the 'strokeWidth' property (adjust the type accordingly)
-    roughEle: any; // You may want to specify a more specific type for roughEle
+    color: string; // Store the line color
+    roughEle: any;
 };
-
 
 type Point = {
     clientX: number;
@@ -59,6 +52,7 @@ function App() {
     const [action, setAction] = useState("none");
     const [toolType, setToolType] = useState("pencil");
     const [selectedElement, setSelectedElement] = useState<Element | null>(null);
+    const [selectedColor, setSelectedColor] = useState("black"); // Added color state
 
     useEffect(() => {
         const canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -93,9 +87,9 @@ function App() {
 
         if (path !== undefined) drawpath();
 
-        elements.forEach(({ roughEle }) => {
+        elements.forEach(({ roughEle, color }) => {
             context.globalAlpha = 1;
-            roughCanvas.draw(roughEle);
+            roughCanvas.draw(roughEle, { stroke: color }); // Set the line color
         });
 
         return () => {
@@ -103,17 +97,9 @@ function App() {
         };
     }, [elements, path]);
 
-    const updateElement = (index: number, x1: number, y1: number, x2: number, y2: number, toolType: string) => {
-        const updatedElement = {
-            id: index,
-            x1,
-            y1,
-            x2,
-            y2,
-            type: toolType,
-            strokeWidth: 5,
-            roughEle: gen.line(x1, y1, x2, y2),
-        }
+    const updateElement = (index: number, x1: number, y1: number, x2: number, y2: number) => {
+        const color = selectedColor; // Use the currently selected color
+        const updatedElement = createElement(index, x1, y1, x2, y2, color);
         const elementsCopy = [...elements];
         elementsCopy[index] = updatedElement;
         setElements(elementsCopy);
@@ -139,18 +125,12 @@ function App() {
 
             context.lineCap = "round";
             context.moveTo(clientX, clientY);
+            context.strokeStyle = selectedColor; // Set the stroke color
             context.beginPath();
         } else {
-            const element = createElement(id, clientX, clientY, clientX, clientY);
+            const element = createElement(id, clientX, clientY, clientX, clientY, selectedColor);
 
-
-            const updatedElement = {
-                ...element,
-                type: toolType,
-                strokeWidth: 5,
-            };
-
-            setElements((prevState) => [...prevState, updatedElement]);
+            setElements((prevState) => [...prevState, element]);
         }
     };
 
@@ -175,7 +155,7 @@ function App() {
             const index = elements.length - 1;
             const { x1, y1 } = elements[index];
 
-            updateElement(index, x1, y1, clientX, clientY, toolType);
+            updateElement(index, x1, y1, clientX, clientY);
         }
     };
 
@@ -183,9 +163,9 @@ function App() {
         if (action === "drawing") {
             const index = selectedElement?.id;
             if (index !== undefined) {
-                const { id, type, strokeWidth } = elements[index];
+                const { id, color } = elements[index];
                 const { x1, y1, x2, y2 } = adjustElementCoordinates(elements[index]);
-                updateElement(id, x1, y1, x2, y2, type);
+                updateElement(id, x1, y1, x2, y2);
             }
         } else if (action === "sketching") {
             const canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -203,6 +183,14 @@ function App() {
         <div>
             <div>
                 <Swatch setToolType={setToolType} />
+                <div>
+                    <span>Select Color: </span>
+                    <input
+                        type="color"
+                        value={selectedColor}
+                        onChange={(e) => setSelectedColor(e.target.value)}
+                    />
+                </div>
             </div>
             <canvas
                 id="canvas"
